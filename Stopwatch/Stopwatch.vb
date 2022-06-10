@@ -1,32 +1,32 @@
-﻿Public Class Frm_stopwatch
-    Dim time As Date
-    Dim hours As Byte
+﻿Public Class MainForm
+    Dim _time As Date
+    Dim _hours As Byte
 
     Private Sub Input()
         Dim temp As String()
-        temp = txt_io.Text.Split(":")
-        hours = temp(0)
-        time = "00:" & temp(1) & ":" & temp(2)
+        temp = IOTxt.Text.Split(":")
+        _hours = temp(0)
+        _time = "00:" & temp(1) & ":" & temp(2)
     End Sub
 
     Private Sub Output()
-        txt_io.Text = hours.ToString.PadLeft(2, "0") + ":" + time.ToString("mm:ss")
+        IOTxt.Text = _hours.ToString.PadLeft(2, "0") + ":" + _time.ToString("mm:ss")
     End Sub
 
     Private Sub StartAll()
-        tmr_second.Start()
-        txt_io.ReadOnly = True
-        cmd_startstop.Text = "Stop"
+        Timer.Start()
+        IOTxt.ReadOnly = True
+        StartButton.Text = "Stop"
     End Sub
 
     Private Sub StopAll()
-        tmr_second.Stop()
-        txt_io.ReadOnly = False
-        cmd_startstop.Text = "Start"
+        Timer.Stop()
+        IOTxt.ReadOnly = False
+        StartButton.Text = "Start"
     End Sub
 
-    Private Sub Cmd_startstop_Click(sender As Object, e As EventArgs) Handles cmd_startstop.Click
-        If cmd_startstop.Text.Equals("Start") Then
+    Private Sub StartButton_Click(sender As Object, e As EventArgs) Handles StartButton.Click
+        If StartButton.Text.Equals("Start") Then
             Try
                 Input()
             Catch ex As Exception
@@ -34,33 +34,33 @@
                 Exit Sub
             End Try
             StartAll()
-            cmd_resetrestore.Text = "Reset"
-        ElseIf cmd_startstop.Text.Equals("Stop") Then
+            ResetButton.Text = "Reset"
+        ElseIf StartButton.Text.Equals("Stop") Then
             StopAll()
         End If
     End Sub
 
-    Private Sub Cmd_resetrestore_Click(sender As Object, e As EventArgs) Handles cmd_resetrestore.Click
-        If cmd_resetrestore.Text.Equals("Reset") Then
+    Private Sub ResetButton_Click(sender As Object, e As EventArgs) Handles ResetButton.Click
+        If ResetButton.Text.Equals("Reset") Then
             StopAll()
-            txt_io.Text = "00:00:00"
-            cmd_resetrestore.Text = "Restore"
-        ElseIf cmd_resetrestore.Text.Equals("Restore") Then
+            IOTxt.Text = "00:00:00"
+            ResetButton.Text = "Restore"
+        ElseIf ResetButton.Text.Equals("Restore") Then
             Output()
-            cmd_resetrestore.Text = "Reset"
+            ResetButton.Text = "Reset"
         End If
     End Sub
 
-    Private Sub Tmr_second_Tick(sender As Object, e As EventArgs) Handles tmr_second.Tick
-        If time.ToString("mm:ss") = "59:59" Then
+    Private Sub Timer_Tick(sender As Object, e As EventArgs) Handles Timer.Tick
+        If _time.ToString("mm:ss") = "59:59" Then
             Try
-                hours += 1
+                _hours += 1
             Catch ex As OverflowException
                 StopAll()
                 MsgBox(ex.Message, MsgBoxStyle.Critical)
             End Try
         End If
-        time = time.AddSeconds(1)
+        _time = _time.AddSeconds(1)
         Output()
     End Sub
 End Class
